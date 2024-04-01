@@ -1,2 +1,2 @@
 # rock-paper-scissors
-A rock paper scissors game using javascript on the console.
+A rock paper scissors game on a webpage with functional buttons acting as GUI.
