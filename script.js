@@ -9,7 +9,6 @@
 let round = 1;
 let playerScore = 0;
 let computerScore = 0;
-let gameEnded = false;
 
 const rockButton = document.getElementById('rock');
 const paperButton = document.getElementById('paper');
@@ -42,7 +41,7 @@ function determineWinner(playerChoice, computerChoice) {
 function playRound(playerMove) {
     const computerMove = computerChoice();
     const result = determineWinner(playerMove, computerMove);
-    document.getElementById('results').innerText = `Your move was ${playerMove}.\n Computer\'s move was ${computerMove}.\n ${result}`;
+    document.getElementById('results').innerText = `${playerMove} vs ${computerMove}.\n ${result}`;
     updateScores();
 }
 
@@ -53,17 +52,53 @@ function updateScores() {
     document.getElementById('computer-score').innerText = computerScore;
 
     //End when a score has reached 5.
-    if(playerScore >= 5) {
-        endGame('You')
-    } else if(computerScore >= 5) {
-        endGame('Computer')
+    if(playerScore >= 5 || computerScore >= 5) {
+        endGame( playerScore > computerScore ? 'You' : 'Computer');
     } else {
         round++;
     }
 }
 
+//Disable the rock,paper, scissor buttons.
+function disableButtons() {
+    rockButton.disabled = true;
+    paperButton.disabled = true;
+    scissorsButton.disabled = true;
+}
+
+function enableButtons() {
+    rockButton.disabled = false;
+    paperButton.disabled = false;
+    scissorsButton.disabled = false;
+}
+
+function resetGame() {
+    round = 1;
+    playerScore = 0;
+    computerScore = 0;
+    document.getElementById('round').innerText = round;
+    document.getElementById('player-score').innerText = playerScore;
+    document.getElementById('computer-score').innerText = computerScore;
+    document.getElementById('results').innerText = '';
+    enableButtons();
+}
+
+//Called when either player reaches a score of 5.
+//1. Disable the buttons.
+//2. Create a 'play again' button to reset all the scores.
 function endGame(winner) {
-    document.getElementById('results').innerText = `${winner} have won the game!`;
+    document.getElementById('results').innerText = `${winner} won the game!`;
+    disableButtons();
+
+    //Create 'play again' button.
+    const playAgainButton = document.createElement('button');
+    playAgainButton.id = 'play-again';
+    playAgainButton.innerText = 'Play Again';
+    playAgainButton.addEventListener('click', function() {
+        resetGame();
+        this.remove();
+    });
+    document.body.appendChild(playAgainButton);
 }
 
 //Event listeners for each buttons.
